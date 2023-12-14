@@ -2,8 +2,13 @@
 
 "use strict"
 
-const arr = [];
-for(let count=30; count>=0; count--){
-    arr.push(count);
+let a =30
+function counter() {
+    if (a>=0){
+        console.log(a);
+        a--;   
+    }else{
+        clearInterval(interval);
+    }
 }
-console.log(arr);
+let interval = setInterval(counter, 500);
