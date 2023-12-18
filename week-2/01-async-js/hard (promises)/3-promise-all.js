@@ -22,20 +22,20 @@ function wait3(t) {
     });
 }
 
-// function wait(t) {
-//     return new Promise((resolve) => {
-//         setTimeout(resolve, t*1000);
-//     });
-// }
+function wait(t) {
+    return new Promise((resolve) => {
+        setTimeout(resolve, t*1000);
+    });
+}
 
 function calculateTime(t1, t2, t3) {
     let start = Date.now();
-    return Promise.all([wait1(t1), wait2(t2), wait3(t3)]).then(()=>{
+    // return Promise.all([wait1(t1), wait2(t2), wait3(t3)]).then(()=>{
+    //     return (Date.now() - start);
+    // })
+    return Promise.all([wait(t1), wait(t2), wait(t3)]).then(()=>{
         return (Date.now() - start);
     })
-    /*return Promise.all([wait1(t1), wait2(t2), wait3(t3)]).then(()=>{
-        return (Date.now() - start);
-    })*/
 }
 
 module.exports = calculateTime;
