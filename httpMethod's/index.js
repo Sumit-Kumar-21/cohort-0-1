@@ -40,6 +40,7 @@ app.route('/api/user/:id')
 
         if(userIndex !== -1) {
             data[userIndex] = { ...data[userIndex], ...updatedUser };
+            fs.writeFile('./MOCK_DATA.json', JSON.stringify(data), ()=>{});
             res.json({ message: 'User updated successfully', user: data[userIndex] });
         } else {
           res.status(404).json({ message: 'User not found' });
