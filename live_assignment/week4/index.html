@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document object</title>
+</head>
+<body>
+    <script>
+        async function populateDiv() {
+            const a = document.getElementById("id1").value;
+            const b = document.getElementById("id2").value;
+            const c = document.getElementById("id3").value;
+
+            const response= await fetch("http://localhost:3080/calculate?a=" + a + "&b=" + b + "&c=" + c)
+            const ans = await response.json();
+            document.getElementById("finalans").innerHTML= ans.html;
+            // document.getElementById("finalans").innerHTML= ans.interest;
+
+        }
+    </script>
+    principal amount: <input type="text" id="id1" placeholder="principal amount"><br><br>
+    annual interest rate: <input type="text" id="id2" placeholder="annual interest rate"><br><br>
+    Duration :  <input type="text" id="id3" placeholder="time(in year)"><br><br>
+    <button onclick="populateDiv()">calculate </button><br><br>
+    <div id="finalans"></div>
+</body>
+</html>
