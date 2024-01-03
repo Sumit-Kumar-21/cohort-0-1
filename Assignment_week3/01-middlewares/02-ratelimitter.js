@@ -11,6 +11,11 @@ const app = express();
 // You have been given a numberOfRequestsForUser object to start off with which
 // clears every one second
 
+let numberOfRequestsForUser = {};
+setInterval(() => {
+    numberOfRequestsForUser = {};
+}, 1000)
+
 app.use((req, res, next) => {
   const userId = req.header('user-id');
 
@@ -23,11 +28,6 @@ app.use((req, res, next) => {
 
   next();
 });
-
-let numberOfRequestsForUser = {};
-setInterval(() => {
-    numberOfRequestsForUser = {};
-}, 1000)
 
 app.get('/user', function(req, res) {
   res.status(200).json({ name: 'john' });
