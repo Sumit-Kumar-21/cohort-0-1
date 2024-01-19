@@ -2,31 +2,44 @@ import { useEffect, useRef } from "react";
 
 function Otp() {
 
-    const load = useRef();
+    const first = useRef();
     const sec = useRef();
     const third = useRef();
     const forth = useRef();
     const button = useRef();
 
     useEffect(()=>{
-        load.current.focus();
+        first.current.focus();
     },[])
 
-    function onListenFirst() {
-        sec.current.focus();
+    function onListenFirst(e) {
+        if(e.target.value === ""){
+            first.current.focus()
+        }else{
+            sec.current.focus();
+        }
     }
     
-    function onListenSec(button) {
-        third.current.focus();
+    function onListenSec(e) {
+        if(e.target.value === ""){
+            first.current.focus()
+        }else{
+            third.current.focus();
+        }
     }
 
-    function onListenThird(e) {
-        forth.current.focus()
-        console.log(e.target.value);;
+    function onListenThird(e){
+        if(e.target.value === ""){
+            sec.current.focus()
+        }else{
+            forth.current.focus();
+        }
     }
 
-    function onListenFourth() {
-        button.current.focus();
+    function onListenFourth(e) {
+        if(e.target.value === ""){
+            third.current.focus()
+        }
     }
 
     return <div style={{display:"flex", justifyContent:"center",}}>
@@ -38,7 +51,7 @@ function Otp() {
 
 
                 <div style={{display:"flex", marginTop:"10%"}}>
-                    <input style={{height:"30px", backgroundColor:"white", width:"30px", margin:"0 5px 0 0", textAlign:"center", fontSize:"20px", fontWeight:"bold", borderRadius:"20%"}} onChange={onListenFirst} ref={load} />
+                    <input style={{height:"30px", backgroundColor:"white", width:"30px", margin:"0 5px 0 0", textAlign:"center", fontSize:"20px", fontWeight:"bold", borderRadius:"20%"}} onChange={onListenFirst} ref={first} />
                     <input style={{height:"30px", backgroundColor:"white", width:"30px", margin:"0 5px 0 0", textAlign:"center", fontSize:"20px", fontWeight:"bold", borderRadius:"20%"}} onChange={onListenSec}  ref={sec}/>
                     <input style={{height:"30px", backgroundColor:"white", width:"30px", margin:"0 5px 0 0", textAlign:"center", fontSize:"20px", fontWeight:"bold", borderRadius:"20%"}} onChange={onListenThird} ref={third}/>
                     <input style={{height:"30px", backgroundColor:"white", width:"30px", margin:"0 5px 0 0", textAlign:"center", fontSize:"20px", fontWeight:"bold", borderRadius:"20%"}}  onChange={onListenFourth} ref={forth}/>
