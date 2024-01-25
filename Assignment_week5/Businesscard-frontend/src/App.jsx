@@ -17,8 +17,10 @@ function App() {
 
   return (
     <>
-      <CreatingCard />
-      {/* <BusinessCard value={card}></BusinessCard> */}
+      {/* <CreatingCard /> */}
+
+      {/* {"card.hasOwnProperty("interests")"} this is written for security check if server not respond anything */}
+      { card.hasOwnProperty("interests") && <BusinessCard value={card}></BusinessCard>}
     </>
   )
 }
