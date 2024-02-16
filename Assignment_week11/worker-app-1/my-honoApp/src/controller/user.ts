@@ -1,7 +1,8 @@
-import { env } from "hono/adapter";
+// import { env } from "hono/adapter";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { checkInUser, checkUser } from "../zod/user";
+import { sign } from "hono/jwt";
 
 const JWT_TOKEN = "mytoken";
 
@@ -18,13 +19,6 @@ export async function handleSignupPostreq(c: any) {
     datasourceUrl:
       "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmZmN2VlNGMtNWE3NC00ZDg2LTgxMjctNDc1NWVmZGU4ZGYxIiwidGVuYW50X2lkIjoiM2Q4YTJjY2Y0NmIwMGQ1NjlmYzc1ZjA5MzZkZGZhNTg1MWFkOGQ3N2ZlMGI4NDBlMjcyYmFjZDRjZWM0OGU5ZSIsImludGVybmFsX3NlY3JldCI6ImZkNzgxMDJjLWFkNDUtNDIyNS05MGI1LTI0MDZmYWYyNjY1ZCJ9.0aSNcQRuDBBWYhjolk-zIP3tHzoy-QJlPzjUPvBC5tM",
   }).$extends(withAccelerate());
-
-  // const prisma = new PrismaClient({
-  //   datasourceUrl:
-  //     "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmZmN2VlNGMtNWE3NC00ZDg2LTgxMjctNDc1NWVmZGU4ZGYxIiwidGVuYW50X2lkIjoiM2Q4YTJjY2Y0NmIwMGQ1NjlmYzc1ZjA5MzZkZGZhNTg1MWFkOGQ3N2ZlMGI4NDBlMjcyYmFjZDRjZWM0OGU5ZSIsImludGVybmFsX3NlY3JldCI6ImZkNzgxMDJjLWFkNDUtNDIyNS05MGI1LTI0MDZmYWYyNjY1ZCJ9.0aSNcQRuDBBWYhjolk-zIP3tHzoy-QJlPzjUPvBC5tM",
-  // });
-
-  // prisma.$extends(withAccelerate());
 
   const check = checkUser.safeParse(body);
 
@@ -50,7 +44,11 @@ export async function handleSignupPostreq(c: any) {
     },
   });
 
-  return c.json({ msg: "User created successfully" });
+  const userId = res.id;
+
+  const token = await sign(userId, JWT_TOKEN);
+
+  return c.json({ msg: "User created successfully", token: token });
 }
 
 export async function handleSigninPostreq(c: any) {
@@ -65,13 +63,14 @@ export async function handleSigninPostreq(c: any) {
     return c.json({ msg: "you type wrong input pls fill valid input" });
   }
 
-  const { DATABASE_URL, JWT_TOKEN } = env<{
-    DATABASE_URL: string;
-    JWT_TOKEN: string;
-  }>(c);
+  // const { DATABASE_URL, JWT_TOKEN } = env<{
+  //   DATABASE_URL: string;
+  //   JWT_TOKEN: string;
+  // }>(c);
 
   const prisma = new PrismaClient({
-    datasourceUrl: DATABASE_URL,
+    datasourceUrl:
+      "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmZmN2VlNGMtNWE3NC00ZDg2LTgxMjctNDc1NWVmZGU4ZGYxIiwidGVuYW50X2lkIjoiM2Q4YTJjY2Y0NmIwMGQ1NjlmYzc1ZjA5MzZkZGZhNTg1MWFkOGQ3N2ZlMGI4NDBlMjcyYmFjZDRjZWM0OGU5ZSIsImludGVybmFsX3NlY3JldCI6ImZkNzgxMDJjLWFkNDUtNDIyNS05MGI1LTI0MDZmYWYyNjY1ZCJ9.0aSNcQRuDBBWYhjolk-zIP3tHzoy-QJlPzjUPvBC5tM",
   }).$extends(withAccelerate());
 
   const isUserExist = await prisma.user.findFirst({
@@ -84,18 +83,22 @@ export async function handleSigninPostreq(c: any) {
 
   const userId = isUserExist.id;
 
+  const token = await sign(userId, JWT_TOKEN);
+
   return c.json({
     message: "User logged-In successfully",
+    token: token,
   });
 }
 
 export async function handlegetUserPosts(c: any) {
-  const { DATABASE_URL } = env<{
-    DATABASE_URL: string;
-  }>(c);
+  // const { DATABASE_URL } = env<{
+  //   DATABASE_URL: string;
+  // }>(c);
 
   const prisma = new PrismaClient({
-    datasourceUrl: DATABASE_URL,
+    datasourceUrl:
+      "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmZmN2VlNGMtNWE3NC00ZDg2LTgxMjctNDc1NWVmZGU4ZGYxIiwidGVuYW50X2lkIjoiM2Q4YTJjY2Y0NmIwMGQ1NjlmYzc1ZjA5MzZkZGZhNTg1MWFkOGQ3N2ZlMGI4NDBlMjcyYmFjZDRjZWM0OGU5ZSIsImludGVybmFsX3NlY3JldCI6ImZkNzgxMDJjLWFkNDUtNDIyNS05MGI1LTI0MDZmYWYyNjY1ZCJ9.0aSNcQRuDBBWYhjolk-zIP3tHzoy-QJlPzjUPvBC5tM",
   }).$extends(withAccelerate());
 
   const res = prisma.posts.findMany({
@@ -109,12 +112,13 @@ export async function handlegetUserPosts(c: any) {
 }
 
 export async function handlePostPostreq(c: any) {
-  const { DATABASE_URL } = env<{
-    DATABASE_URL: string;
-  }>(c);
+  // const { DATABASE_URL } = env<{
+  //   DATABASE_URL: string;
+  // }>(c);
 
   const prisma = new PrismaClient({
-    datasourceUrl: DATABASE_URL,
+    datasourceUrl:
+      "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmZmN2VlNGMtNWE3NC00ZDg2LTgxMjctNDc1NWVmZGU4ZGYxIiwidGVuYW50X2lkIjoiM2Q4YTJjY2Y0NmIwMGQ1NjlmYzc1ZjA5MzZkZGZhNTg1MWFkOGQ3N2ZlMGI4NDBlMjcyYmFjZDRjZWM0OGU5ZSIsImludGVybmFsX3NlY3JldCI6ImZkNzgxMDJjLWFkNDUtNDIyNS05MGI1LTI0MDZmYWYyNjY1ZCJ9.0aSNcQRuDBBWYhjolk-zIP3tHzoy-QJlPzjUPvBC5tM",
   }).$extends(withAccelerate());
 
   const body: {
@@ -139,12 +143,13 @@ export async function handlePostPostreq(c: any) {
 export async function handlePostById(c: any) {
   const id: number = c.req.param("id");
 
-  const { DATABASE_URL } = env<{
-    DATABASE_URL: string;
-  }>(c);
+  // const { DATABASE_URL } = env<{
+  //   DATABASE_URL: string;
+  // }>(c);
 
   const prisma = new PrismaClient({
-    datasourceUrl: DATABASE_URL,
+    datasourceUrl:
+      "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmZmN2VlNGMtNWE3NC00ZDg2LTgxMjctNDc1NWVmZGU4ZGYxIiwidGVuYW50X2lkIjoiM2Q4YTJjY2Y0NmIwMGQ1NjlmYzc1ZjA5MzZkZGZhNTg1MWFkOGQ3N2ZlMGI4NDBlMjcyYmFjZDRjZWM0OGU5ZSIsImludGVybmFsX3NlY3JldCI6ImZkNzgxMDJjLWFkNDUtNDIyNS05MGI1LTI0MDZmYWYyNjY1ZCJ9.0aSNcQRuDBBWYhjolk-zIP3tHzoy-QJlPzjUPvBC5tM",
   }).$extends(withAccelerate());
 
   const isPostExist = await prisma.posts.findFirst({
@@ -173,12 +178,13 @@ export async function handlePutById(c: any) {
     body?: string;
   } = await c.req.json();
 
-  const { DATABASE_URL } = env<{
-    DATABASE_URL: string;
-  }>(c);
+  // const { DATABASE_URL } = env<{
+  //   DATABASE_URL: string;
+  // }>(c);
 
   const prisma = new PrismaClient({
-    datasourceUrl: DATABASE_URL,
+    datasourceUrl:
+      "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmZmN2VlNGMtNWE3NC00ZDg2LTgxMjctNDc1NWVmZGU4ZGYxIiwidGVuYW50X2lkIjoiM2Q4YTJjY2Y0NmIwMGQ1NjlmYzc1ZjA5MzZkZGZhNTg1MWFkOGQ3N2ZlMGI4NDBlMjcyYmFjZDRjZWM0OGU5ZSIsImludGVybmFsX3NlY3JldCI6ImZkNzgxMDJjLWFkNDUtNDIyNS05MGI1LTI0MDZmYWYyNjY1ZCJ9.0aSNcQRuDBBWYhjolk-zIP3tHzoy-QJlPzjUPvBC5tM",
   }).$extends(withAccelerate());
 
   const isPostExist = await prisma.posts.findFirst({
@@ -214,12 +220,13 @@ export async function handlePutById(c: any) {
 export async function handlePostDeleteById(c: any) {
   const id: number = c.req.param("id");
 
-  const { DATABASE_URL } = env<{
-    DATABASE_URL: string;
-  }>(c);
+  // const { DATABASE_URL } = env<{
+  //   DATABASE_URL: string;
+  // }>(c);
 
   const prisma = new PrismaClient({
-    datasourceUrl: DATABASE_URL,
+    datasourceUrl:
+      "prisma://accelerate.prisma-data.net/?api_key=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcGlfa2V5IjoiNmZmN2VlNGMtNWE3NC00ZDg2LTgxMjctNDc1NWVmZGU4ZGYxIiwidGVuYW50X2lkIjoiM2Q4YTJjY2Y0NmIwMGQ1NjlmYzc1ZjA5MzZkZGZhNTg1MWFkOGQ3N2ZlMGI4NDBlMjcyYmFjZDRjZWM0OGU5ZSIsImludGVybmFsX3NlY3JldCI6ImZkNzgxMDJjLWFkNDUtNDIyNS05MGI1LTI0MDZmYWYyNjY1ZCJ9.0aSNcQRuDBBWYhjolk-zIP3tHzoy-QJlPzjUPvBC5tM",
   }).$extends(withAccelerate());
 
   const isPostExist = await prisma.posts.findFirst({

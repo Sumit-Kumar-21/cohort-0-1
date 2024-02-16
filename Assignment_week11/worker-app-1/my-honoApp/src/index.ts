@@ -1,8 +1,5 @@
 import { Hono } from "hono";
 import { router } from "./router/user";
-import { env } from "hono/adapter";
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
 const app = new Hono();
 
 app.route("/app/v1/user", router);
