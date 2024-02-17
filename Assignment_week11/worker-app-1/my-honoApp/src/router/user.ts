@@ -1,8 +1,12 @@
 import { Context, Hono } from "hono";
 import {
+  handlePostById,
+  handlePostDeleteById,
   handlePostPostreq,
+  handlePutById,
   handleSigninPostreq,
   handleSignupPostreq,
+  handlegetPosts,
   handlegetUserPosts,
 } from "../controller/user";
 import { authmiddleware } from "../middleware/user";
@@ -14,6 +18,15 @@ export const router = new Hono();
 
 router.post("/signup", handleSignupPostreq);
 router.post("/signin", handleSigninPostreq);
+router.get("/all-posts", authmiddleware, handlegetPosts);
+router.get("/posts", authmiddleware, handlegetUserPosts)
+router.post("/create-post", authmiddleware, handlePostPostreq);
+router.get("/post/:id", authmiddleware, handlePostById);
+router.put("/post/:id", authmiddleware, handlePutById);
+router.delete("/post/:id", authmiddleware, handlePostDeleteById)
+
+// router.get("/check", authmiddleware)
+
 router.get("/users", async (c: Context) => {
   const prisma = new PrismaClient({
     datasourceUrl:
@@ -23,8 +36,3 @@ router.get("/users", async (c: Context) => {
   const res=await prisma.user.findMany();
   return c.json({users: res})
 });
-router.get("/posts", authmiddleware, handlegetUserPosts);
-router.post("/post", authmiddleware, handlePostPostreq);
-router.get("/post/:id", authmiddleware);
-
-router.get("/check", authmiddleware)
