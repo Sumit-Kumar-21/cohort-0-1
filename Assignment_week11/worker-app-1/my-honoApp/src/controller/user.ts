@@ -7,7 +7,7 @@ import { Jwt } from "hono/utils/jwt";
 import { Context } from "hono";
 
 
-export async function handleSignupPostreq(c: any) {
+export async function handleSignupPostreq(c : Context) {
   const JWT_TOKEN = "mytoken";
 
   const body: {
@@ -32,7 +32,7 @@ export async function handleSignupPostreq(c: any) {
   }
 
   const isUserExist = await prisma.user.findFirst({
-    where: { username: body.email },
+    where: { email: body.email },
   });
 
   if (isUserExist) {
@@ -54,7 +54,7 @@ export async function handleSignupPostreq(c: any) {
   return c.json({ msg: "User created successfully", token: token });
 }
 
-export async function handleSigninPostreq(c: any) {
+export async function handleSigninPostreq(c : Context) {
   const JWT_TOKEN = "mytoken";
 
   const body: {
@@ -96,7 +96,7 @@ export async function handleSigninPostreq(c: any) {
   });
 }
 
-export async function handlegetUserPosts(c: any) {
+export async function handlegetUserPosts(c : any) {
   // const { DATABASE_URL } = env<{
   //   DATABASE_URL: string;
   // }>(c);
@@ -116,7 +116,7 @@ export async function handlegetUserPosts(c: any) {
   });
 }
 
-export async function handlePostPostreq(c: any) {
+export async function handlePostPostreq(c : any) {
   // const { DATABASE_URL } = env<{
   //   DATABASE_URL: string;
   // }>(c);
@@ -145,7 +145,7 @@ export async function handlePostPostreq(c: any) {
   });
 }
 
-export async function handlePostById(c: any) {
+export async function handlePostById(c : Context) {
   const id: number = Number(c.req.param("id"));
 
   // const { DATABASE_URL } = env<{
@@ -175,7 +175,7 @@ export async function handlePostById(c: any) {
     },
   });
 }
-export async function handlePutById(c: any) {
+export async function handlePutById(c : Context) {
   const id: number = Number(c.req.param("id"));
 
   const body: {
@@ -222,7 +222,7 @@ export async function handlePutById(c: any) {
   });
 }
 
-export async function handlePostDeleteById(c: any) {
+export async function handlePostDeleteById(c : Context) {
   const id: number = Number(c.req.param("id"));
 
   // const { DATABASE_URL } = env<{

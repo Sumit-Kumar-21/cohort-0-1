@@ -14,9 +14,12 @@ export async function authmiddleware(c: any, next: Next) {
     // }>(c);
 
     const decode= await Jwt.verify(token, JWT_TOKEN);
-    if(decode.userId){
+    // return c.json(decode)
+    if(decode){
 
-        c.req.userId = decode.userId;
+        c.req.userId = decode;
+
+        // return c.json(c.req.userId)
         await next();
     }else{
         return c.json({message: "invalid token"});
