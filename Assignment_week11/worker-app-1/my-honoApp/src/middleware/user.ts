@@ -18,7 +18,7 @@ export async function authmiddleware(c: any, next: Next) {
         c.req.userId = decode.userId;
         await next();
     }else{
-        return c.res.body({message: "invalid token"});
+        return c.json({message: "invalid token"});
     }
   }
 }

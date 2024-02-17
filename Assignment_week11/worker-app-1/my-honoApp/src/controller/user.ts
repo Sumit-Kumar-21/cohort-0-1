@@ -3,10 +3,11 @@ import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { checkInUser, checkUser } from "../zod/user";
 import { sign } from "hono/jwt";
+import { Context } from "hono";
 
 const JWT_TOKEN = "mytoken";
 
-export async function handleSignupPostreq(c: any) {
+export async function handleSignupPostreq(c: Context) {
   const body: {
     username: string;
     email: string;
@@ -51,7 +52,7 @@ export async function handleSignupPostreq(c: any) {
   return c.json({ msg: "User created successfully", token: token });
 }
 
-export async function handleSigninPostreq(c: any) {
+export async function handleSigninPostreq(c: Context) {
   const body: {
     email: string;
     password: string;
@@ -140,8 +141,8 @@ export async function handlePostPostreq(c: any) {
   });
 }
 
-export async function handlePostById(c: any) {
-  const id: number = c.req.param("id");
+export async function handlePostById(c: Context) {
+  const id: number = Number(c.req.param("id"));
 
   // const { DATABASE_URL } = env<{
   //   DATABASE_URL: string;
@@ -170,8 +171,8 @@ export async function handlePostById(c: any) {
     },
   });
 }
-export async function handlePutById(c: any) {
-  const id: number = c.req.param("id");
+export async function handlePutById(c: Context) {
+  const id: number = Number(c.req.param("id"));
 
   const body: {
     title?: string;
@@ -217,8 +218,8 @@ export async function handlePutById(c: any) {
   });
 }
 
-export async function handlePostDeleteById(c: any) {
-  const id: number = c.req.param("id");
+export async function handlePostDeleteById(c: Context) {
+  const id: number = Number(c.req.param("id"));
 
   // const { DATABASE_URL } = env<{
   //   DATABASE_URL: string;
