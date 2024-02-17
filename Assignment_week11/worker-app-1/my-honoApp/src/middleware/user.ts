@@ -1,18 +1,19 @@
-import { Next } from "hono";
+import { Context, Next } from "hono";
 import { env } from "hono/adapter";
-import { verify } from "hono/jwt";
+import { Jwt } from "hono/utils/jwt";
 
 
-const JWT_TOKEN ="mytoken";
+
 
 export async function authmiddleware(c: any, next: Next) {
+  const JWT_TOKEN ="mytoken";
     const token =c.req.header("Authorization")
   if (token) {
     // const { JWT_TOKEN } = env<{
     //   JWT_TOKEN: string;
     // }>(c);
 
-    const decode= await verify(token, JWT_TOKEN);
+    const decode= await Jwt.verify(token, JWT_TOKEN);
     if(decode.userId){
 
         c.req.userId = decode.userId;

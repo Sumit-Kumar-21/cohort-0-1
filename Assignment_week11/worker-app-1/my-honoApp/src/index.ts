@@ -1,10 +1,17 @@
 import { Hono } from "hono";
 import { router } from "./router/user";
+import { PrismaClient } from "@prisma/client/edge";
+import { withAccelerate } from "@prisma/extension-accelerate";
+import { sign } from "hono/jwt";
+// import { Jwt } from "jsonwebtoken";
+import { Jwt } from "hono/utils/jwt";
+Jwt
 const app = new Hono();
 
 app.route("/app/v1/user", router);
 
 // app.post("/signup", async (c: any) => {
+//   const JWT_TOKEN = "mytoken";
 //   const body: {
 //     username: string;
 //     email: string;
@@ -32,7 +39,11 @@ app.route("/app/v1/user", router);
 //     },
 //   });
 
-//   return c.json({ msg: "User created successfully" });
+//   const userId = res.id;
+
+//   const token=await Jwt.sign(userId, JWT_TOKEN);
+
+//   return c.json({ msg: "User created successfully", token: token });
 // });
 
 export default app;

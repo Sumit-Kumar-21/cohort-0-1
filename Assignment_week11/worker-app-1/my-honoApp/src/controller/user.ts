@@ -2,12 +2,14 @@
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { checkInUser, checkUser } from "../zod/user";
-import { sign } from "hono/jwt";
+import { Jwt } from "hono/utils/jwt";
+
 import { Context } from "hono";
 
-const JWT_TOKEN = "mytoken";
 
-export async function handleSignupPostreq(c: Context) {
+export async function handleSignupPostreq(c: any) {
+  const JWT_TOKEN = "mytoken";
+
   const body: {
     username: string;
     email: string;
@@ -47,12 +49,14 @@ export async function handleSignupPostreq(c: Context) {
 
   const userId = res.id;
 
-  const token = await sign(userId, JWT_TOKEN);
+  const token = await Jwt.sign(userId, JWT_TOKEN);
 
   return c.json({ msg: "User created successfully", token: token });
 }
 
-export async function handleSigninPostreq(c: Context) {
+export async function handleSigninPostreq(c: any) {
+  const JWT_TOKEN = "mytoken";
+
   const body: {
     email: string;
     password: string;
@@ -84,7 +88,7 @@ export async function handleSigninPostreq(c: Context) {
 
   const userId = isUserExist.id;
 
-  const token = await sign(userId, JWT_TOKEN);
+  const token = await Jwt.sign(userId, JWT_TOKEN);
 
   return c.json({
     message: "User logged-In successfully",
@@ -141,7 +145,7 @@ export async function handlePostPostreq(c: any) {
   });
 }
 
-export async function handlePostById(c: Context) {
+export async function handlePostById(c: any) {
   const id: number = Number(c.req.param("id"));
 
   // const { DATABASE_URL } = env<{
@@ -171,7 +175,7 @@ export async function handlePostById(c: Context) {
     },
   });
 }
-export async function handlePutById(c: Context) {
+export async function handlePutById(c: any) {
   const id: number = Number(c.req.param("id"));
 
   const body: {
@@ -218,7 +222,7 @@ export async function handlePutById(c: Context) {
   });
 }
 
-export async function handlePostDeleteById(c: Context) {
+export async function handlePostDeleteById(c: any) {
   const id: number = Number(c.req.param("id"));
 
   // const { DATABASE_URL } = env<{
