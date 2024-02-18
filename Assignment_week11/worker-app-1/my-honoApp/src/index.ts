@@ -5,10 +5,11 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { sign } from "hono/jwt";
 // import { Jwt } from "jsonwebtoken";
 import { Jwt } from "hono/utils/jwt";
-Jwt
+import { cors } from "hono/cors";
 const app = new Hono();
 
-app.route("/app/v1/user", router);
+app.use("/api/*",cors())
+app.route("/api/v1/user", router);
 
 // app.post("/signup", async (c: any) => {
 //   const JWT_TOKEN = "mytoken";
