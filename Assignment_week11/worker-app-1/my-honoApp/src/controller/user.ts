@@ -87,18 +87,18 @@ export async function handleSigninPostreq(c: Context) {
 }
 
 export async function handlegetPosts(c: any) {
-  const res = await prisma.posts.findMany({
-    where: {
-      userId: c.req.useId,
-    },
-  });
+  const res = await prisma.posts.findMany();
   return c.json({
     posts: res,
   });
 }
 
 export async function handlegetUserPosts(c: any) {
-  const res = await prisma.posts.findMany();
+  const res = await prisma.posts.findMany({
+    where: {
+      userId: c.req.useId,
+    },
+  });
   return c.json({
     posts: res,
   });
