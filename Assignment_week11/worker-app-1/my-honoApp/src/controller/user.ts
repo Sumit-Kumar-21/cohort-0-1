@@ -66,7 +66,10 @@ export async function handleSigninPostreq(c: Context) {
   }
 
   const isUserExist = await prisma.user.findFirst({
-    where: { username: body.email },
+    where: {
+      email: body.email,
+      password: body.password,
+    },
   });
 
   if (isUserExist == null) {
@@ -84,11 +87,10 @@ export async function handleSigninPostreq(c: Context) {
 }
 
 export async function handlegetPosts(c: any) {
-
-  const res =await prisma.posts.findMany({
-    where:{
-      userId: c.req.useId
-    }
+  const res = await prisma.posts.findMany({
+    where: {
+      userId: c.req.useId,
+    },
   });
   return c.json({
     posts: res,
@@ -96,8 +98,7 @@ export async function handlegetPosts(c: any) {
 }
 
 export async function handlegetUserPosts(c: any) {
-
-  const res =await prisma.posts.findMany();
+  const res = await prisma.posts.findMany();
   return c.json({
     posts: res,
   });
@@ -156,7 +157,7 @@ export async function handlePutById(c: any) {
   const isPostExist = await prisma.posts.findFirst({
     where: {
       id: id,
-      userId: c.req.userId
+      userId: c.req.userId,
     },
   });
 
@@ -169,7 +170,7 @@ export async function handlePutById(c: any) {
   const res = await prisma.posts.update({
     where: {
       id: id,
-      userId: c.req.useId
+      userId: c.req.useId,
     },
     data: {
       title: body.title,
@@ -191,7 +192,7 @@ export async function handlePostDeleteById(c: any) {
   const isPostExist = await prisma.posts.findFirst({
     where: {
       id: id,
-      userId: c.req.userId
+      userId: c.req.userId,
     },
   });
 
@@ -204,7 +205,7 @@ export async function handlePostDeleteById(c: any) {
   const res = await prisma.posts.delete({
     where: {
       id: id,
-      userId: c.req.userId
+      userId: c.req.userId,
     },
   });
   return c.json({
