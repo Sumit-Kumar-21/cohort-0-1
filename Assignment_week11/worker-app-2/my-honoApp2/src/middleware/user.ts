@@ -4,20 +4,21 @@ import { Jwt } from "hono/utils/jwt";
 
 export async function authmiddleware(c: any, next: Next) {
   const JWT_TOKEN = "mytoken";
-  const token = c.req.header("Authorization");
-
+  
   try {
-    if (token!==null || token !== undefined) {
-
+    const token: string = c.req.header("Authorization").split(" ")[1];
+    if (token !== null || token !== undefined) {
       const decode = await Jwt.verify(token, JWT_TOKEN);
       if (decode) {
         c.req.userId = decode;
         await next();
       } else {
-        return c.json({ message: "invalid token" });
+        return c.body("you are unauthroized user sorry", 401);
       }
+    } else {
+      return c.body("you are unauthroized user sorry", 401);
     }
   } catch (error) {
-    return c.json({message: "you dont have token"})
+    return c.body("you are unauthroized user sorry", 401);
   }
 }

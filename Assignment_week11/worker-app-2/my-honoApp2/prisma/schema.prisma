@@ -12,17 +12,24 @@ datasource db {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   username String
   email    String
   password String
-  posts Posts[]
+  posts    Posts[]
 }
 
 model Posts {
+  id     Int      @id @default(autoincrement())
+  title  String
+  body   String
+  tags   Tags[]
+  User   User     @relation(fields: [userId], references: [id])
+  userId Int
+}
+
+model Tags {
   id Int @id @default(autoincrement())
-  title String
-  body String
-  User      User    @relation(fields: [userId], references: [id])
-  userId    Int
+  tag String @unique
+  post Posts[]
 }

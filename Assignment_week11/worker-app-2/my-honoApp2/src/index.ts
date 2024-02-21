@@ -3,12 +3,12 @@ import { router } from "./router/user";
 import { PrismaClient } from "@prisma/client/edge";
 import { withAccelerate } from "@prisma/extension-accelerate";
 import { sign } from "hono/jwt";
-// import { Jwt } from "jsonwebtoken";
-import { Jwt } from "hono/utils/jwt";
 import { cors } from "hono/cors";
+// import { Jwt } from "jsonwebtoken";
+// import { Jwt } from "hono/utils/jwt";
 const app = new Hono();
 
-app.use("/api/*",cors())
+app.use(cors())
 app.route("/api/v1/user", router);
 
 // app.post("/signup", async (c: any) => {
